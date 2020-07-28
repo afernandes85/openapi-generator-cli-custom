@@ -1,25 +1,17 @@
 dist: trusty
 
-# jobs:
-#   include:
-#     - stage: build docker image
-#       script:
-#       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-#       - docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
-#       - docker images
-#       - docker tag openapi-generator-cli-custom $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
-#       - docker push $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
-#     - stage: test
-#       script: 
-#         - mkdir -p local/out
-#         - docker run --rm -v "${PWD}:/local" $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
-#         - cd local/out && ls -l 
-script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
-  - docker images
-  - docker run --rm -v "${PWD}:/local" $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
-deploy:
-  provider: script
-  skip_cleanup: true
-  script: bash scripts/deploy.sh 
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
+      - docker images
+    - stage: test docker image
+      script: 
+        - docker run --rm -v "${PWD}:/local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
+    - stage: deploy docker image
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker images
+        - docker tag openapi-generator-cli-custom $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
+        - docker push $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
