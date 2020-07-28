@@ -12,6 +12,6 @@ COPY ./codegen/* ${GEN_DIR}/modules/openapi-generator-cli/target/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["help"] 
