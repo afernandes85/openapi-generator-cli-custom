@@ -4,10 +4,11 @@ jobs:
   include:
     - stage: build docker image
       script:
-      - docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
-      - docker images
+        - docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
+        - docker images
     - stage: test docker image
-      script: 
+      script:
+        - docker images
         - docker run --rm -v "${PWD}:/local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
     - stage: deploy docker image
       script:
