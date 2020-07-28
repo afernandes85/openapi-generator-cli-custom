@@ -1,0 +1,34 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image, test and deploy
+      if: github.event == 'push'
+      run: |
+        docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
+        docker images
+        docker run --rm -v "${PWD}:/local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker tag openapi-generator-cli-custom $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
+        docker push $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
+    
+    - uses: actions/checkout@v2
+    - name: Build the Docker image and test
+      if: github.event == 'pull_request'
+      run: |
+        docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
+        docker images
+        docker run --rm -v "${PWD}:/local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
+        
