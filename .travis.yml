@@ -9,6 +9,7 @@ script:
   - docker run --rm -v "${PWD}:/local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output /local/out --skip-validate-spec
 
 after_script:
+  if: branch = master
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker images
   - docker tag openapi-generator-cli-custom $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
