@@ -22,7 +22,7 @@ jobs:
       - name: Test the Docker image
         run: |
           mkdir -p local/out
-          ls -l local/out
-          docker run --rm -v "${PWD}:local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output local/out --skip-validate-spec
+          ls -l ./local/out
+          docker run --rm -v "${PWD}:./local" openapi-generator-cli-custom generate --generator-name CustomPythonClientCodegen --input-spec https://raw.githubusercontent.com/openapitools/openapi-generator/master/modules/openapi-generator/src/test/resources/2_0/petstore.yaml --output ./local/out --skip-validate-spec
 
           
