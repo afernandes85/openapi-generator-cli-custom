@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image, test and deploy
-        if: github.event == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -28,7 +28,7 @@ jobs:
           docker push $DOCKER_USERNAME/openapi-generator-cli-custom:4.2.2
       
       - name: Build the Docker image and test
-        if: github.event != 'pull_request'
+        if: github.ref != 'refs/heads/master'
         run: |
           docker build --build-arg VERSION=4.2.2 -t openapi-generator-cli-custom -f Dockerfile .
           docker images
