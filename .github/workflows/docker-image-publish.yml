@@ -19,7 +19,7 @@ jobs:
             
       - name: Get the version
         id: vars
-        run: echo ::set-output name=tag::$(echo ${{ GITHUB_REF:10 }})
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
       - name: Build the tagged Docker image
         run: docker build --build-arg VERSION=${{ steps.vars.outputs.tag }} -t ${{ secrets.DOCKER_USERNAME }}/openapi-generator-cli-custom:${{ steps.vars.outputs.tag }} -f Dockerfile .
