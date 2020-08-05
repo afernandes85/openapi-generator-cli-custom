@@ -13,9 +13,10 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
 
         String apiPackageDir = packagePath() + File.separatorChar + "api";
 
-        File folder = new File("/generator/python/templates");
+        File folder = new File(templateDir);
         File[] files = folder.listFiles();
         if (files != null) {
+            System.out.println("Adding below custom templates");
             for (File file : files) {
                 if(supportingFiles.stream().filter(f -> f.templateFile.equals(file.getName())).findFirst().isPresent()) {
                     continue;

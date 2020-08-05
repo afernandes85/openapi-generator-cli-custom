@@ -14,9 +14,10 @@ public class CustomCSharpNetCoreClientCodegen extends CSharpNetCoreClientCodegen
         String packageFolder = sourceFolder + File.separator + packageName;
         String apiPackageDir = packageFolder + File.separator + apiPackage;
 
-        File folder = new File("/generator/dotnet/templates");
+        File folder = new File(templateDir);
         File[] files = folder.listFiles();
         if (files != null) {
+            System.out.println("Adding below custom templates");
             for (File file : files) {
                 if(supportingFiles.stream().filter(f -> f.templateFile.equals(file.getName())).findFirst().isPresent()) {
                     continue;
