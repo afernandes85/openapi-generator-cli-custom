@@ -17,6 +17,9 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
         File[] files = folder.listFiles();
         if (files != null) {
             for (File file : files) {
+                if(supportingFiles.stream().filter(f -> f.templateFile.equals(file.getName())).findFirst().isPresent()) {
+                    continue;
+                }
                 System.out.println(file.getName());
                 if (file.getName().endsWith("_doc.mustache")) {
                     String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf("_doc.mustache"))) + ".md";
