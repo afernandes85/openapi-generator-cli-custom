@@ -13,7 +13,7 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
 
         String apiPackageDir = packagePath() + File.separatorChar + "api";
 
-        File folder = new File("/local/python/templates");
+        File folder = new File("/generator/python/templates");
         File[] files = folder.listFiles();
         if (files != null) {
             for (File file : files) {
