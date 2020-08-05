@@ -2,11 +2,14 @@ import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.*;
 import org.openapitools.codegen.utils.ProcessUtils;
 import com.google.common.base.CaseFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class CustomPythonClientCodegen extends PythonClientCodegen {
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(PythonClientCodegen.class);
+
     @Override
     public void processOpts() {
         super.processOpts();
@@ -16,12 +19,11 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
         File folder = new File(templateDir);
         File[] files = folder.listFiles();
         if (files != null) {
-            System.out.println("Adding below custom templates");
             for (File file : files) {
                 if(supportingFiles.stream().filter(f -> f.templateFile.equals(file.getName())).findFirst().isPresent()) {
                     continue;
                 }
-                System.out.println(file.getName());
+                LOGGER.info("adding custom template file {}", file.getName());
                 if (file.getName().endsWith("_doc.mustache")) {
                     String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf("_doc.mustache"))) + ".md";
                     supportingFiles.add(new SupportingFile(file.getName(), apiDocPath, outFilename));
